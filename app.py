@@ -165,8 +165,17 @@ def handle_message(event):
         except:
             # print('fail')
             send_text = TextSendMessage(text='註冊失敗，可能是格式錯誤，請確認格式再輸入一遍')
+            line_bot_api.reply_message(event.reply_token, send_text)
             cursor.execute("ROLLBACK")
-            
+    
+    if '輸入邀請碼' in msg:
+        msg = re.sub('輸入邀請碼','',msg)
+        cursor.execute(f'SELECT uid FROM "public"."info" WHERE "invitation_code"'+ f"= '{user_id}';")
+        data = cursor.fetchall()
+        print(data[0][0],data)
+
+
+
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
