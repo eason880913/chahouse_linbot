@@ -153,7 +153,7 @@ def handle_message(event):
             cursor.execute(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail},'{level}','{code}','0',{phone},{sex});")
             cursor.execute("COMMIT")
         except:
-            # print('fail')
+            print('fail')
             cursor.execute("ROLLBACK")
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
