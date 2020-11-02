@@ -153,8 +153,11 @@ def handle_message(event):
             cursor.execute(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail}','{level}','{code}','0','{phone}','{sex}');")
             cursor.execute("COMMIT")
             send_text = TextSendMessage(text=f'已成功註冊，您的邀請碼為{code}。趕快邀請朋友一同加入chahouse吧！')
-            print(send_text)
-            line_bot_api.reply_message(event.reply_token, send_text)
+            send_text1 = TextSendMessage(text=f'已成功註冊，您的邀請碼為{code}。趕快邀請朋友一同加入chahouse吧！')
+            l1 = []
+            l1.append(send_text)
+            l1.append(send_text1)
+            line_bot_api.reply_message(event.reply_token, l1)
         except:
             # print('fail')
             cursor.execute("ROLLBACK")
