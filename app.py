@@ -150,8 +150,7 @@ def handle_message(event):
         random_codes = lambda x, y: ''.join([random.choice(x) for i in range(y)])
         code = random_codes(poolOfChars, 6)
         try:
-            print(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail},'{level}','{code}','0',{phone},{sex});")
-            cursor.execute(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail},'{level}','{code}','0',{phone},{sex});")
+            cursor.execute(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail}','{level}','{code}','0',{phone},{sex});")
             cursor.execute("COMMIT")
         except:
             print('fail')
