@@ -170,8 +170,7 @@ def handle_message(event):
     
     if '輸入邀請碼' in msg:
         msg = re.sub('輸入邀請碼：','',msg)
-        cursor.execute(f'SELECT uid FROM "public"."info" WHERE "invitation_code"'+ f" = '{user_id}';")
-        print(f'SELECT uid FROM "public"."info" WHERE "invitation_code"'+ f" = '{user_id}';")
+        cursor.execute(f'SELECT uid FROM "public"."info" WHERE "invitation_code"'+ f" = '{msg}';")
         data = cursor.fetchall()
         print(data)
 
