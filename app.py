@@ -14,6 +14,7 @@ import re
 import time
 import psycopg2
 import os
+import random, string
 
 app = Flask(__name__)
 
@@ -28,6 +29,7 @@ def db():
                                         database="dd4bln8ufum5ac")
     cursor = connection.cursor()
     return cursor
+cursor = db()
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -136,7 +138,25 @@ def handle_message(event):
     if '聯絡資訊' == msg:
         ddd = TextSendMessage(text='Fb：XXXXXX\nGmail：XXXXXX@gmail.com\n電話：02—XXXX XXXX')
         line_bot_api.reply_message(event.reply_token, ddd)
-
+    if '註冊' in msg:
+        msg = re.sub('註冊：','',msg) #註冊：王小明 男 都經三 abc@gmail.com 09xxxxxxxx
+        msg = msg.split()
+        name = msg[0]
+        sex = msg[1]
+        level = msg[2]
+        gmail = msg[3]
+        phone = msg[4]
+        poolOfChars  = string.ascii_letters + string.digits
+        random_codes = lambda x, y: ''.join([random.choice(x) for i in range(y)])
+        code = random_codes(poolOfChars, 6)
+        try:
+            cursor.execute(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone")'+f"VALUES ('{user_id}','{name}','{gmail},'{level}','{code}','1',{phone},{sex});")
+            cursor.execute("COMMIT")
+        except:
+            # print('fail')
+            cursor.execute("ROLLBACK")
+        cursor.execute(f'UPDATE "public"."main" SET "im_coffee"'+f"= '{num}'"+'WHERE "uid"'+f" = '{user_id}';")
+        cursor.execute("COMMIT")
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
