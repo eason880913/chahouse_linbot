@@ -150,11 +150,13 @@ def handle_message(event):
         random_codes = lambda x, y: ''.join([random.choice(x) for i in range(y)])
         code = random_codes(poolOfChars, 6)
         try:
-            print(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail}','{level}','{code}','0','{phone}','{sex}');")
             cursor.execute(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail}','{level}','{code}','0','{phone}','{sex}');")
             cursor.execute("COMMIT")
+            send_text = TextSendMessage(text=f'已成功註冊，您的邀請碼為{code}。趕快邀請朋友一同加入chahouse吧！')
+            print(send_text)
+            line_bot_api.reply_message(event.reply_token, send_text)
         except:
-            print('fail')
+            # print('fail')
             cursor.execute("ROLLBACK")
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
