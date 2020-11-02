@@ -155,8 +155,6 @@ def handle_message(event):
         except:
             # print('fail')
             cursor.execute("ROLLBACK")
-        cursor.execute(f'UPDATE "public"."main" SET "im_coffee"'+f"= '{num}'"+'WHERE "uid"'+f" = '{user_id}';")
-        cursor.execute("COMMIT")
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
