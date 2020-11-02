@@ -152,11 +152,13 @@ def handle_message(event):
         try:
             cursor.execute(f'INSERT INTO "public"."info" ("uid","name","gmail","department_level","invitation_code","invitation","phone","sex")'+f"VALUES ('{user_id}','{name}','{gmail}','{level}','{code}','0','{phone}','{sex}');")
             cursor.execute("COMMIT")
-            send_text = TextSendMessage(text=f'已成功註冊，您的邀請碼為{code}。趕快邀請朋友一同加入chahouse吧！')
-            send_text1 = TextSendMessage(text=f'已成功註冊，您的邀請碼為{code}。趕快邀請朋友一同加入chahouse吧！')
+            send_text = TextSendMessage(text=f'已成功註冊，您的邀請碼為{code}。趕快邀請朋友一同加入chahouse，讓他輸入您的邀請碼，您與您的朋友都會獲得一張沙拉買大送小的優惠卷喔')
+            send_text1 = TextSendMessage(text=f'現在開始您也可以輸入別人的邀請碼喔，但一個人只能輸入一次別人的邀請碼喔！\n『輸入邀請碼：XXXXXX』\n範例如下')
+            send_text2 = TextSendMessage(text=f'輸入邀請碼：a1b2c3')
             l1 = []
             l1.append(send_text)
             l1.append(send_text1)
+            l1.append(send_text2)
             line_bot_api.reply_message(event.reply_token, l1)
         except:
             # print('fail')
