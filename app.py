@@ -218,13 +218,16 @@ def handle_message(event):
         cursor.execute(f'SELECT invitation_code FROM "public"."info" WHERE "uid"'+ f" = '{user_id}';")
         data = cursor.fetchall()
         code = data[0][0]
-        
-        cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{user_id}' "+'and "type" '+f"= '1';")
-        data = cursor.fetchall()
-        num = int(data[0][0])
+        try:
+            cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{user_id}' "+'and "type" '+f"= '1';")
+            data = cursor.fetchall()
+            num = int(data[0][0])
 
-        send_text = TextSendMessage(text = f'您的邀請碼為：{code}\n您沙拉買大送小的優惠卷有{str(num)}張')
-        line_bot_api.reply_message(event.reply_token, send_text)
+            send_text = TextSendMessage(text = f'您的邀請碼為：{code}\n您沙拉買大送小的優惠卷有{str(num)}張\n目前優惠卷尚不能使用，等我把線上點餐的服務移植到line上QAQ')
+            line_bot_api.reply_message(event.reply_token, send_text)
+        except:
+            send_text = TextSendMessage(text = f'您的邀請碼為：{code}\n您現在還沒有優惠卷\n目前優惠卷尚不能使用，等我把線上點餐的服務移植到line上QAQ')
+            line_bot_api.reply_message(event.reply_token, send_text)
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
