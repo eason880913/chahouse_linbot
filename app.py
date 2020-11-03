@@ -223,7 +223,7 @@ def handle_message(event):
         data = cursor.fetchall()
         num = int(data[0][0])
 
-        send_text = TextSendMessage(text = f'您的邀請碼為：{code}\n您沙拉買大送小的優惠卷有{str(num)}')
+        send_text = TextSendMessage(text = f'您的邀請碼為：{code}\n您沙拉買大送小的優惠卷有{str(num)}張')
         line_bot_api.reply_message(event.reply_token, send_text)
 
 if __name__ == "__main__":
