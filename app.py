@@ -169,7 +169,7 @@ def handle_message(event):
             cursor.execute("ROLLBACK")
     
     if '輸入邀請碼' in msg:
-        cursor.execute(f'SELECT invitation FROM "public"."info" WHERE "uid"'+ f"= '{user_id} '; ")
+        cursor.execute(f'SELECT invitation FROM "public"."info" WHERE "uid"'+ f"= '{user_id}'; ")
         invitation = cursor.fetchall()
         print(invitation) 
 
