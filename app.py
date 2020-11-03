@@ -172,8 +172,16 @@ def handle_message(event):
         msg = re.sub('輸入邀請碼：','',msg)
         cursor.execute(f'SELECT uid FROM "public"."info" WHERE "invitation_code"'+ f" = '{msg}';")
         data = cursor.fetchall()
-        print(data)
-
+        uid = data[0][0]
+        try:              #  SELECT num FROM "public"."discount" WHERE "uid" = 'eason'and "type" = '1' ;
+            cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{uid}' "+'and "type" '+f"= '1';")
+            data = cursor.fetchall()
+            num = int(data[0][0])+int(1)
+            cursor.execute(f'UPDATE "public"."discount" SET "num"'+f"= '{num}'"+'WHERE "uid"'+ f"= '{uid}' "+'and "type" '+"= '1';")
+            cursor.execute("COMMIT")
+        except:
+            cursor.execute('INSERT INTO "public"."discount" ("uid","type","num")'+ f"VALUES ('{uid}','1','1');")
+            cursor.execute("COMMIT")
 
 
 if __name__ == "__main__":
