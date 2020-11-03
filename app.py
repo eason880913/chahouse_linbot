@@ -171,6 +171,7 @@ def handle_message(event):
     if '輸入邀請碼' in msg:
         cursor.execute(f'SELECT invitation FROM "public"."info" WHERE "uid"'+ f"= '{user_id}'; ")
         invitation = cursor.fetchall()
+        print(invitation[0][0])
         if invitation[0][0] == 'True':
             send_text = TextSendMessage(text='您已經輸入過邀請碼')
             line_bot_api.reply_message(event.reply_token, send_text)
