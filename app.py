@@ -171,7 +171,6 @@ def handle_message(event):
     if '輸入邀請碼' in msg:
         cursor.execute(f'SELECT invitation FROM "public"."info" WHERE "uid"'+ f"= '{user_id}'; ")
         invitation = cursor.fetchall()
-        print(invitation[0][0])
         if str(invitation[0][0]) == 'True':
             send_text = TextSendMessage(text='您已經輸入過邀請碼')
             line_bot_api.reply_message(event.reply_token, send_text)
@@ -180,19 +179,23 @@ def handle_message(event):
             cursor.execute(f'SELECT uid FROM "public"."info" WHERE "invitation_code"'+ f" = '{msg}';")
             data = cursor.fetchall()
             uid = data[0][0]
-            try:              #  SELECT num FROM "public"."discount" WHERE "uid" = 'eason'and "type" = '1' ;
-                cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{uid}' "+'and "type" '+f"= '1';")
-                data = cursor.fetchall()
-                num = int(data[0][0])+int(1)
-                cursor.execute(f'UPDATE "public"."discount" SET "num"'+f"= '{num}'"+'WHERE "uid"'+ f"= '{uid}' "+'and "type" '+"= '1';")
-                cursor.execute("COMMIT")
-                cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
-                cursor.execute("COMMIT")
-            except:
-                cursor.execute('INSERT INTO "public"."discount" ("uid","type","num")'+ f"VALUES ('{uid}','1','1');")
-                cursor.execute("COMMIT")
-                cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
-                cursor.execute("COMMIT")
+            if uid == user_id:
+                send_text = TextSendMessage(text='不能輸入自己的邀請碼喔')
+                line_bot_api.reply_message(event.reply_token, send_text)
+            else:
+                try:         
+                    cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{uid}' "+'and "type" '+f"= '1';")
+                    data = cursor.fetchall()
+                    num = int(data[0][0])+int(1)
+                    cursor.execute(f'UPDATE "public"."discount" SET "num"'+f"= '{num}'"+'WHERE "uid"'+ f"= '{uid}' "+'and "type" '+"= '1';")
+                    cursor.execute("COMMIT")
+                    cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
+                    cursor.execute("COMMIT")
+                except:
+                    cursor.execute('INSERT INTO "public"."discount" ("uid","type","num")'+ f"VALUES ('{uid}','1','1');")
+                    cursor.execute("COMMIT")
+                    cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
+                    cursor.execute("COMMIT")
 
 
 if __name__ == "__main__":
