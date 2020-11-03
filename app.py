@@ -199,7 +199,7 @@ def handle_message(event):
                         cursor.execute("COMMIT")
                     except:
                         send_text = TextSendMessage(text='沒有這個邀請碼喔～')
-                    line_bot_api.reply_message(event.reply_token, send_text)
+                        line_bot_api.reply_message(event.reply_token, send_text)
 
 
 if __name__ == "__main__":
