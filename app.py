@@ -214,8 +214,17 @@ def handle_message(event):
                 send_text = TextSendMessage(text='沒有這個邀請碼喔～')
                 line_bot_api.reply_message(event.reply_token, send_text)
 
-        # if '我的優惠卷' == msg:
+        if '我的優惠卷' == msg:
+            cursor.execute(f'SELECT invitation_code FROM "public"."info" WHERE "uid"'+ f" = '{user_id}';")
+            data = cursor.fetchall()
+            code = data[0][0]
+            
+            cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{user_id}' "+'and "type" '+f"= '1';")
+            data = cursor.fetchall()
+            num = int(data[0][0])
 
+            send_text = TextSendMessage(text = f'您的邀請碼為：{code}\n您沙拉買大送小的優惠卷有{str(num)}')
+            line_bot_api.reply_message(event.reply_token, send_text)
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
