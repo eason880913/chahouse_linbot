@@ -185,18 +185,34 @@ def handle_message(event):
                     line_bot_api.reply_message(event.reply_token, send_text)
                 else:
                     try:         
+                        cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{user_id}' "+'and "type" '+f"= '1';")
+                        data = cursor.fetchall()
+                        num = int(data[0][0])+int(1)
+                        cursor.execute(f'UPDATE "public"."discount" SET "num"'+f"= '{num}'"+'WHERE "uid"'+ f"= '{user_id}' "+'and "type" '+"= '1';")
+                        cursor.execute("COMMIT")
+                        cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{user_id}' ;")
+                        cursor.execute("COMMIT")
+                    except:
+                        cursor.execute('INSERT INTO "public"."discount" ("uid","type","num")'+ f"VALUES ('{user_id}','1','1');")
+                        cursor.execute("COMMIT")
+                        cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{user_id}' ;")
+                        cursor.execute("COMMIT")
+                    try:         
                         cursor.execute(f'SELECT num FROM "public"."discount" WHERE "uid"'+ f"= '{uid}' "+'and "type" '+f"= '1';")
                         data = cursor.fetchall()
                         num = int(data[0][0])+int(1)
                         cursor.execute(f'UPDATE "public"."discount" SET "num"'+f"= '{num}'"+'WHERE "uid"'+ f"= '{uid}' "+'and "type" '+"= '1';")
                         cursor.execute("COMMIT")
-                        cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
-                        cursor.execute("COMMIT")
+                        send_text = TextSendMessage(text='輸入邀請碼成功，您與對方都獲得了沙拉買大送小的優惠券喔～')
+                        line_bot_api.reply_message(event.reply_token, send_text)
                     except:
                         cursor.execute('INSERT INTO "public"."discount" ("uid","type","num")'+ f"VALUES ('{uid}','1','1');")
                         cursor.execute("COMMIT")
-                        cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
-                        cursor.execute("COMMIT")
+                        send_text = TextSendMessage(text='輸入邀請碼成功，您與對方都獲得了沙拉買大送小的優惠券喔～')
+                        line_bot_api.reply_message(event.reply_token, send_text)
+
+                    
+
             except:
                 send_text = TextSendMessage(text='沒有這個邀請碼喔～')
                 line_bot_api.reply_message(event.reply_token, send_text)
