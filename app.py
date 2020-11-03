@@ -214,7 +214,7 @@ def handle_message(event):
                 send_text = TextSendMessage(text='沒有這個邀請碼喔～')
                 line_bot_api.reply_message(event.reply_token, send_text)
 
-        if '我的優惠卷' == msg:
+        # if '我的優惠卷' == msg:
 
 
 if __name__ == "__main__":
