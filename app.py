@@ -154,7 +154,7 @@ def handle_message(event):
             cursor.execute("COMMIT")
             send_text = TextSendMessage(text='您已成功註冊')
             send_text0 = TextSendMessage(text=f'您的邀請碼為{code}。\n趕快邀請朋友一同加入chahouse吧！讓他輸入您的邀請碼，您與您的朋友都會獲得一張沙拉買大送小的優惠卷喔')
-            send_text1 = TextSendMessage(text=f'現在您也可以輸入別人的邀請碼，\n但一個人只能輸入一次別人的邀請碼喔！\n『輸入邀請碼：XXXXXX』\n範例如下~')
+            send_text1 = TextSendMessage(text=f'現在您也可以輸入別人的邀請碼，但一個人只能輸入一次別人的邀請碼喔！\n『輸入邀請碼：XXXXXX』\n範例如下~')
             send_text2 = TextSendMessage(text=f'輸入邀請碼：a1b2c3')
             l1 = []
             l1.append(send_text)
@@ -172,7 +172,7 @@ def handle_message(event):
         cursor.execute(f'SELECT invitation FROM "public"."info" WHERE "uid"'+ f"= '{user_id}'; ")
         invitation = cursor.fetchall()
         if str(invitation[0][0]) == 'True':
-            send_text = TextSendMessage(text='您已經輸入過邀請碼')
+            send_text = TextSendMessage(text='您已經輸入過邀請碼囉～')
             line_bot_api.reply_message(event.reply_token, send_text)
         else:  
             msg = re.sub('輸入邀請碼：','',msg)
@@ -180,7 +180,7 @@ def handle_message(event):
             data = cursor.fetchall()
             uid = data[0][0]
             if uid == user_id:
-                send_text = TextSendMessage(text='不能輸入自己的邀請碼喔')
+                send_text = TextSendMessage(text='不能輸入自己的邀請碼喔～')
                 line_bot_api.reply_message(event.reply_token, send_text)
             else:
                 try:         
@@ -192,10 +192,14 @@ def handle_message(event):
                     cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
                     cursor.execute("COMMIT")
                 except:
-                    cursor.execute('INSERT INTO "public"."discount" ("uid","type","num")'+ f"VALUES ('{uid}','1','1');")
-                    cursor.execute("COMMIT")
-                    cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
-                    cursor.execute("COMMIT")
+                    try:
+                        cursor.execute('INSERT INTO "public"."discount" ("uid","type","num")'+ f"VALUES ('{uid}','1','1');")
+                        cursor.execute("COMMIT")
+                        cursor.execute(f'UPDATE "public"."info" SET "invitation"'+" = '1'"+'WHERE "uid"'+ f"= '{uid}' ;")
+                        cursor.execute("COMMIT")
+                    except:
+                        send_text = TextSendMessage(text='沒有這個邀請碼喔～')
+                    line_bot_api.reply_message(event.reply_token, send_text)
 
 
 if __name__ == "__main__":
