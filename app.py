@@ -164,7 +164,7 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token, l1)
         except:
             # print('fail')
-            send_text = TextSendMessage(text='註冊失敗，可能是格式錯誤，請確認格式再輸入一遍')
+            send_text = TextSendMessage(text='註冊失敗，可能是格式錯誤，請確認格式再輸入一遍，或是您已經註冊過囉')
             line_bot_api.reply_message(event.reply_token, send_text)
             cursor.execute("ROLLBACK")
     
@@ -210,12 +210,11 @@ def handle_message(event):
                         cursor.execute("COMMIT")
                         send_text = TextSendMessage(text='輸入邀請碼成功，您與對方都獲得了沙拉買大送小的優惠券喔～')
                         line_bot_api.reply_message(event.reply_token, send_text)
-
-                    
-
             except:
                 send_text = TextSendMessage(text='沒有這個邀請碼喔～')
                 line_bot_api.reply_message(event.reply_token, send_text)
+
+        if '我的優惠卷' == msg:
 
 
 if __name__ == "__main__":
